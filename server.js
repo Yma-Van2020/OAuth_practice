@@ -57,7 +57,7 @@ app.use(passport.session());
 
 function checkLoggedIn(req, res, next) {
     console.log(`current user is ${req.user}`)
-    const isLoggedIn = req.user;
+    const isLoggedIn = req.isAuthenticated() && req.user;
     if(!isLoggedIn) {
         return res.status(401).json({
             error: 'You haven\'t logged in'
@@ -87,7 +87,8 @@ app.get('/failure', (req, res) => {
 })
 
 app.get('/auth/logout', (req, res) => {
-
+    req.logout();// passport removes req.user and terminates any logged in session
+    return res.redirect('/');
 });
 
 //adding middleware to endpoint
