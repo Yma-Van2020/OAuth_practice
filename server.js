@@ -31,12 +31,12 @@ passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
 
 //save the session to the cookie
 passport.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
 })
 
 //read the session from the cookie
-passport.deserializeUser((obj, done) => {
-    done(null, obj);
+passport.deserializeUser((id, done) => {
+    done(null, id);
 })
 
 const app = express();
