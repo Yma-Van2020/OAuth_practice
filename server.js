@@ -23,25 +23,27 @@ const AUTH_OPTIONS = {
 }
 
 function verifyCallback(accessToken, refreshToken, profile, done){
-    console.log('Google profile', profile);
+    //no error
+    // the authentication process was successful
     done(null, profile);
 }
 
 passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
 
-//save the session to the cookie
+//save in session cookie
 passport.serializeUser((user, done) => {
+    //determine which user data to store in session
     done(null, user.id);
 })
 
-//read the session from the cookie
+//read id from session cookie
 passport.deserializeUser((id, done) => {
     done(null, id);
 })
 
 const app = express();
 
-//security middlewares
+//adds serverl HTTP headers to the response
 app.use(helmet());
 
 app.use(cookieSession({
@@ -54,7 +56,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function checkLoggedIn(req, res, next) {
-    const isLoggedIn = true;
+    console.log(`current user is ${req.user}`)
+    const isLoggedIn = req.user;
     if(!isLoggedIn) {
         return res.status(401).json({
             error: 'You haven\'t logged in'
